@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/v1/usuarios")
 @Validated
@@ -38,7 +40,12 @@ public class UsuarioController {
     @ApiOperation(value = "Busca usuário por email", notes = "Retorna o usuário da busca", response = Usuario.class)
     @RequestMapping(value = "/{email:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<Resource<Usuario>> getUsuarioByEmail(@PathVariable String email) {
-        return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioService.getByEmail(email)), HttpStatus.OK);
+        Optional<Usuario> usuario = usuarioService.getByEmail(email);
+        if (usuario.isPresent()) {
+            return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuario.get()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Resource<Usuario>>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
