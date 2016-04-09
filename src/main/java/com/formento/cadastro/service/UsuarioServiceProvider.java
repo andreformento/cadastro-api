@@ -1,6 +1,5 @@
 package com.formento.cadastro.service;
 
-import com.formento.cadastro.exception.BusinessCadastroExceptionDefault;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.repository.UsuarioRepository;
 import com.formento.cadastro.service.component.CodificadorComponent;
@@ -29,8 +28,8 @@ public class UsuarioServiceProvider implements UsuarioService {
         String senha = codificadorComponent.codificar(usuario.getSenha());
         Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDate.now(), null, usuario.getTelefones());
 
-        usuarioValidator.beforeCreate(usuario);
-        return usuarioRepository.save(usuario);
+        usuarioValidator.beforeCreate(novo);
+        return usuarioRepository.save(novo);
     }
 
     @Override

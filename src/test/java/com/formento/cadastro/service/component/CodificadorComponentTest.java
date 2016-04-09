@@ -1,22 +1,17 @@
 package com.formento.cadastro.service.component;
 
-import com.formento.cadastro.CadastroApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.junit.runners.JUnit4;
+import org.mockito.InjectMocks;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CadastroApplication.class)
-@WebAppConfiguration
+@RunWith(JUnit4.class)
 public class CodificadorComponentTest {
 
-    @Autowired
-    private CodificadorComponent codificadorComponent;
+    @InjectMocks
+    private CodificadorComponent codificadorComponent = new CodificadorComponentProvider();
 
     @Test
     public void deveCodificarASenha() {
