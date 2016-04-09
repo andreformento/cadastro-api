@@ -8,7 +8,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class CadastroApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CadastroApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CadastroApplication.class, args);
+    }
+
 }
