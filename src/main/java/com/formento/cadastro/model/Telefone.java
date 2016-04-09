@@ -1,12 +1,18 @@
 package com.formento.cadastro.model;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Embeddable
 public class Telefone implements Serializable {
 
     private String ddd;
+
+    @NotNull
+    @NotEmpty
     private String numero;
 
     public Telefone() {

@@ -1,5 +1,8 @@
 package com.formento.cadastro.model;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -14,10 +17,14 @@ public class Usuario implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @NotNull
+    @NotEmpty
     private String nome;
 
+    @Email
     @NotNull
     @Column(unique = true)
+    @NotEmpty
     private String email;
 
     private String senha;
@@ -37,8 +44,7 @@ public class Usuario implements Serializable {
 
     }
 
-    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDate ultimoLogin, String token, Collection<Telefone> telefones) {
-        this.id = id;
+    public Usuario(String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDate ultimoLogin, String token, Collection<Telefone> telefones) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -47,6 +53,12 @@ public class Usuario implements Serializable {
         this.ultimoLogin = ultimoLogin;
         this.token = token;
         this.telefones = telefones;
+    }
+
+    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDate ultimoLogin, String token, Collection<Telefone> telefones) {
+        this(nome, email, senha, dataCriacao, dataAtualizacao, ultimoLogin, token, telefones);
+        this.id = id;
+
     }
 
     public Long getId() {

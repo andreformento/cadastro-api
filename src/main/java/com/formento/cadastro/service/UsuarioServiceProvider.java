@@ -3,9 +3,12 @@ package com.formento.cadastro.service;
 import com.formento.cadastro.exception.BusinessCadastroExceptionDefault;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.repository.UsuarioRepository;
+import com.formento.cadastro.service.component.CodificadorComponent;
+import com.formento.cadastro.service.validation.UsuarioValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -15,14 +18,18 @@ public class UsuarioServiceProvider implements UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private UsuarioValidator usuarioValidator;
+
+    @Autowired
+    private CodificadorComponent codificadorComponent;
+
     @Override
     public Usuario create(Usuario usuario) {
-        Optional<Usuario> byEmail = getByEmail(usuario.getEmail());
+        String senha = codificadorComponent.codificar(usuario.getSenha());
+        Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDate.now(), null, usuario.getTelefones());
 
-        if (byEmail.isPresent()) {
-            throw new BusinessCadastroExceptionDefault("E-mail já existente");
-        }
-
+        usuarioValidator.beforeCreate(usuario);
         return usuarioRepository.save(usuario);
     }
 
