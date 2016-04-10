@@ -1,1 +1,1 @@
-web: mvn clean package -Dserver.port=$PORT -DskipTests spring-boot:run
+web: java -Dserver.port=$PORT -DskipTests -jar target/cadastro-api-0.0.1-SNAPSHOT.war
