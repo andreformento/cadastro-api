@@ -4,6 +4,7 @@ import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.security.UsuarioAuthentication;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface UsuarioService {
 
@@ -15,5 +16,8 @@ public interface UsuarioService {
 
     Integer countByEmail(String email);
 
-    Collection<Usuario> getUsuarios();
+    Optional<Usuario> getByEmail(String email);
+
+    Optional<Usuario> getUsuarioLogado();
+
 }

@@ -6,13 +6,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -25,10 +27,15 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @ApiOperation(value = "Buscar usuários", notes = "Retorna uma lista de usuarios", response = Usuario.class)
+    @ApiOperation(value = "Carregar o usuário logado", notes = "Retorna o usuario logado", response = Usuario.class)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<Resources<Usuario>> getUsuarios() {
-        return new ResponseEntity<Resources<Usuario>>(new Resources<>(usuarioService.getUsuarios()), HttpStatus.OK);
+    public HttpEntity<Resource<Usuario>> getUsuario() {
+        Optional<Usuario> usuarioLogado = usuarioService.getUsuarioLogado();
+        if (usuarioLogado.isPresent()) {
+            return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioLogado.get()), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<Resource<Usuario>>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @ApiOperation(value = "Criar um usuário", notes = "Cria e retorna um usuário", response = Usuario.class)

@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-public class JwtUser implements UserDetails {
+public class JwtUser implements UserDetails, UsuarioAuthentication {
 
     private final Long id;
     private final String email;
@@ -84,6 +84,18 @@ public class JwtUser implements UserDetails {
     @JsonIgnore
     public LocalDateTime getUltimoLogin() {
         return ultimoLogin;
+    }
+
+    @JsonIgnore
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getSenha() {
+        return senha;
     }
 
 }

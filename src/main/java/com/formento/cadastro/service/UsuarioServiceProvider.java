@@ -10,11 +10,13 @@ import com.formento.cadastro.service.component.CodificadorComponent;
 import com.formento.cadastro.service.validation.UsuarioValidator;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.Optional;
 
 @Service
 public class UsuarioServiceProvider implements UsuarioService {
@@ -93,8 +95,19 @@ public class UsuarioServiceProvider implements UsuarioService {
     }
 
     @Override
-    public Collection<Usuario> getUsuarios() {
-        return usuarioRepository.getUsuarios();
+    public Optional<Usuario> getByEmail(String email) {
+        return usuarioRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Usuario> getUsuarioLogado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UsuarioAuthentication) {
+            UsuarioAuthentication usuarioAuthentication = (UsuarioAuthentication) authentication.getPrincipal();
+            return usuarioRepository.findByEmail(usuarioAuthentication.getEmail());
+        } else {
+            return Optional.empty();
+        }
     }
 
 }
