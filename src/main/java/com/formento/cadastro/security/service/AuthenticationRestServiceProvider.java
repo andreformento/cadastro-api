@@ -36,9 +36,7 @@ public class AuthenticationRestServiceProvider implements AuthenticationRestServ
     }
 
     public Usuario createAuthenticationToken(UsuarioAuthentication usuarioAuthentication) throws AuthenticationException {
-        Usuario usuario = usuarioService.getByEmailESenha(usuarioAuthentication.getEmail(), usuarioAuthentication.getSenha());
-        createAuthentication(usuarioAuthentication);
-        return usuarioService.updateToken(usuario);
+        return usuarioService.updateToken(usuarioAuthentication);
     }
 
 }

@@ -54,7 +54,7 @@ public class UsuarioServiceProvider implements UsuarioService {
 
         usuarioValidator.beforeCreate(novo);
         Usuario save = usuarioRepository.save(novo);
-//        authenticationRestService.createAuthentication(usuario);
+        authenticationRestService.createAuthentication(usuario);
         return save;
     }
 
@@ -76,7 +76,7 @@ public class UsuarioServiceProvider implements UsuarioService {
                 byEmailESenha.getTelefones());
 
         Usuario save = usuarioRepository.save(usuarioAtualizarToken);
-//        authenticationRestService.createAuthentication(save);
+        authenticationRestService.createAuthentication(usuarioAuthentication);
         return save;
     }
 
