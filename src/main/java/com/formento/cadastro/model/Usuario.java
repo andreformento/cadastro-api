@@ -5,6 +5,7 @@ import com.formento.cadastro.model.converter.EmptyFieldSerializer;
 import com.formento.cadastro.model.converter.LocalDateSerializer;
 import com.formento.cadastro.model.converter.LocalDateTimeSerializer;
 import com.formento.cadastro.security.UsuarioAuthentication;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -15,14 +16,17 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 // Immutable
 @Entity
 public class Usuario implements Serializable, UsuarioAuthentication {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID uuid;
 
     @NotNull
     @NotEmpty
@@ -70,14 +74,14 @@ public class Usuario implements Serializable, UsuarioAuthentication {
         this.telefones = telefones;
     }
 
-    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDateTime ultimoLogin, String token, Collection<Telefone> telefones) {
+    public Usuario(UUID uuid, String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDateTime ultimoLogin, String token, Collection<Telefone> telefones) {
         this(nome, email, senha, dataCriacao, dataAtualizacao, ultimoLogin, token, telefones);
-        this.id = id;
+        this.uuid = uuid;
 
     }
 
-    public Long getId() {
-        return id;
+    public UUID getId() {
+        return uuid;
     }
 
     public String getNome() {
@@ -119,13 +123,13 @@ public class Usuario implements Serializable, UsuarioAuthentication {
 
         Usuario usuario = (Usuario) o;
 
-        return id != null ? id.equals(usuario.id) : usuario.id == null;
+        return uuid != null ? uuid.equals(usuario.uuid) : usuario.uuid == null;
 
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return uuid != null ? uuid.hashCode() : 0;
     }
 
 }

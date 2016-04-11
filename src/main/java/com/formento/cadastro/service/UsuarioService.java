@@ -3,7 +3,6 @@ package com.formento.cadastro.service;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.security.UsuarioAuthentication;
 
-import java.util.Collection;
 import java.util.Optional;
 
 public interface UsuarioService {

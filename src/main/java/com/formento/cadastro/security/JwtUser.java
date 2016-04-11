@@ -6,10 +6,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 public class JwtUser implements UserDetails, UsuarioAuthentication {
 
-    private final Long id;
+    private final UUID uuid;
     private final String email;
     private final String nome;
     private final String token;
@@ -18,8 +19,8 @@ public class JwtUser implements UserDetails, UsuarioAuthentication {
     private final boolean enabled;
     private final LocalDateTime ultimoLogin;
 
-    public JwtUser(Long id, String email, String nome, String token, String senha, Collection<? extends GrantedAuthority> authorities, boolean enabled, LocalDateTime ultimoLogin) {
-        this.id = id;
+    public JwtUser(UUID id, String email, String nome, String token, String senha, Collection<? extends GrantedAuthority> authorities, boolean enabled, LocalDateTime ultimoLogin) {
+        this.uuid = id;
         this.email = email;
         this.nome = nome;
         this.token = token;
@@ -29,9 +30,8 @@ public class JwtUser implements UserDetails, UsuarioAuthentication {
         this.ultimoLogin = ultimoLogin;
     }
 
-    @JsonIgnore
-    public Long getId() {
-        return id;
+    public UUID getId() {
+        return uuid;
     }
 
     @Override
