@@ -62,7 +62,9 @@ public class UsuarioServiceProvider implements UsuarioService {
 
     @Override
     public Usuario updateToken(UsuarioAuthentication usuarioAuthentication) {
-        Usuario byEmailESenha = getByEmailESenha(usuarioAuthentication.getEmail(), getSenhaCodificada(usuarioAuthentication.getSenha()));
+        Usuario byEmailESenha = getByEmail(usuarioAuthentication.getEmail()).orElseThrow(() -> {
+            return new UnauthorizedCadastroExceptionDefault("Usuário e/ou senha inválidos");
+        });
 
         String token = getToken(byEmailESenha);
 
@@ -72,7 +74,7 @@ public class UsuarioServiceProvider implements UsuarioService {
                 byEmailESenha.getEmail(),
                 byEmailESenha.getSenha(),
                 byEmailESenha.getDataCriacao(),
-                byEmailESenha.getDataCriacao(),
+                byEmailESenha.getDataAtualizacao(),
                 LocalDateTime.now(),
                 token,
                 byEmailESenha.getTelefones());
@@ -84,7 +86,7 @@ public class UsuarioServiceProvider implements UsuarioService {
 
     @Override
     public Usuario getByEmailESenha(String email, String senha) {
-        return usuarioRepository.findByEmail(email).orElseThrow(() -> {
+        return usuarioRepository.findByEmailESenha(email, senha).orElseThrow(() -> {
             return new UnauthorizedCadastroExceptionDefault("Usuário e/ou senha inválidos");
         });
     }
