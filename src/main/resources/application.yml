@@ -13,7 +13,7 @@ jwt:
   scheme: Bearer
   secret: Senha
   expiration: 1800 #segundos -> 30 minutos
-#  expiration: 10 #segundos
+#  expiration: 30 #segundos -> teste
   route:
     authentication:
       path: auth
