@@ -2,6 +2,7 @@ package com.formento.cadastro.security;
 
 import com.formento.cadastro.exception.UnauthorizedCadastroExceptionDefault;
 import com.formento.cadastro.security.component.JwtTokenUtil;
+import com.formento.cadastro.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,9 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -52,11 +56,13 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 
             final String authToken = authTokenWithScheme.substring(authScheme.length()).trim();
 
-            String username = jwtTokenUtil.getEmailFromToken(authToken);
+            String email = jwtTokenUtil.getEmailFromToken(authToken);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
                 if (jwtTokenUtil.validateToken(authToken, userDetails)) {
+                    usuarioService.validarTokenGravado(email, authToken);
+
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
                     SecurityContextHolder.getContext().setAuthentication(authentication);

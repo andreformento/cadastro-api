@@ -110,4 +110,12 @@ public class UsuarioServiceProvider implements UsuarioService {
         }
     }
 
+    @Override
+    public void validarTokenGravado(String email, String authToken) {
+        Usuario usuario = getByEmail(email).orElseThrow(() -> new UnauthorizedCadastroExceptionDefault("Usuário não encontrado: " + email));
+        if (!usuario.getToken().equals(authToken)) {
+            throw new UnauthorizedCadastroExceptionDefault("Token inválido - sessão inválida");
+        }
+    }
+
 }

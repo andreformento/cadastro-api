@@ -19,4 +19,5 @@ public interface UsuarioService {
 
     Optional<Usuario> getUsuarioLogado();
 
+    void validarTokenGravado(String email, String authToken);
 }

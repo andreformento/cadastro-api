@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JwtUserDetailsServiceImpl implements UserDetailsService {
+public class JwtUsuarioServiceServiceImpl implements UserDetailsService {
 
     @Autowired
     private UsuarioService usuarioService;
@@ -25,4 +25,5 @@ public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
         return JwtUserFactory.create(usuario);
     }
+
 }
