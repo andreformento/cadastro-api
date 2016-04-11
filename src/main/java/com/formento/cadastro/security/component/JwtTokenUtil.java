@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -25,11 +26,7 @@ public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -3301605591108950415L;
 
     private static final String CLAIM_KEY_USERNAME = "sub";
-    private static final String CLAIM_KEY_AUDIENCE = "audience";
     private static final String CLAIM_KEY_CREATED = "created";
-
-    private static final String AUDIENCE_MOBILE = "mobile";
-    private static final String AUDIENCE_TABLET = "tablet";
 
     @Value("${jwt.secret}")
     private String secret;
@@ -37,80 +34,55 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String getEmailFromToken(String token) {
-        String email;
+    public Optional<String> getEmailFromToken(String token) {
         try {
-            final Claims claims = getClaimsFromToken(token);
-            email = claims.getSubject();
+            final Optional<Claims> claims = getClaimsFromToken(token);
+            return claims.isPresent() ? Optional.ofNullable(claims.get().getSubject()) : Optional.empty();
         } catch (AccessDeniedCadastroExceptionDefault e) {
-            email = null;
             throw e;
         } catch (Exception e) {
-            email = null;
+            return null;
         }
-        return email;
     }
 
-    public LocalDateTime getCreatedDateFromToken(String token) {
-        LocalDateTime created;
+    public Optional<LocalDateTime> getCreatedDateFromToken(String token) {
         try {
-            final Claims claims = getClaimsFromToken(token);
-            created = LocalDateTimeUtil.fromLong((Long) claims.get(CLAIM_KEY_CREATED));
+            final Optional<Claims> claims = getClaimsFromToken(token);
+            return claims.isPresent() ? Optional.ofNullable(LocalDateTimeUtil.fromLong((Long) claims.get().get(CLAIM_KEY_CREATED))) : Optional.empty();
         } catch (Exception e) {
-            created = null;
+            return Optional.empty();
         }
-        return created;
     }
 
-    public LocalDateTime getExpirationDateFromToken(String token) {
-        LocalDateTime expiration;
+    public Optional<LocalDateTime> getExpirationDateFromToken(String token) {
         try {
-            final Claims claims = getClaimsFromToken(token);
-            expiration = LocalDateTimeUtil.fromDate(claims.getExpiration());
+            final Optional<Claims> claims = getClaimsFromToken(token);
+            return claims.isPresent() ? Optional.ofNullable(LocalDateTimeUtil.fromDate(claims.get().getExpiration())) : Optional.empty();
         } catch (Exception e) {
-            expiration = null;
+            return Optional.empty();
         }
-        return expiration;
     }
 
-    public String getAudienceFromToken(String token) {
-        String audience;
+    private Optional<Claims> getClaimsFromToken(String token) {
         try {
-            final Claims claims = getClaimsFromToken(token);
-            audience = (String) claims.get(CLAIM_KEY_AUDIENCE);
-        } catch (Exception e) {
-            audience = null;
-        }
-        return audience;
-    }
-
-    private Claims getClaimsFromToken(String token) {
-        Claims claims;
-        try {
-            claims = Jwts.parser()
+            return Optional.ofNullable(Jwts.parser()
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
-                    .getBody();
+                    .getBody());
         } catch (ExpiredJwtException e) {
-            claims = null;
             throw new AccessDeniedCadastroExceptionDefault("Sessão inválida");
         } catch (Exception e) {
-            claims = null;
+            return Optional.empty();
         }
-        return claims;
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + (expiration * 1000));
+        return new Date(System.currentTimeMillis() + (this.expiration * 1000));
     }
 
     private Boolean isTokenExpired(String token) {
-        final LocalDateTime expiration = getExpirationDateFromToken(token);
-        return expiration.isBefore(LocalDateTime.now());
-    }
-
-    private Boolean isCreatedBeforeLastPasswordReset(LocalDateTime created, LocalDateTime ultimoLogin) {
-        return (ultimoLogin != null && created.isBefore(ultimoLogin.minusSeconds(1)));
+        final Optional<LocalDateTime> expiration = getExpirationDateFromToken(token);
+        return expiration.isPresent() ? expiration.get().isBefore(LocalDateTime.now()) : true;
     }
 
     public String generateToken(UsuarioAuthentication usuarioAuthentication) {
@@ -130,11 +102,9 @@ public class JwtTokenUtil implements Serializable {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
-        final String email = getEmailFromToken(token);
-        final LocalDateTime created = getCreatedDateFromToken(token);
-//        final LocalDateTime expiration = getExpirationDateFromToken(token);
+        final Optional<String> email = getEmailFromToken(token);
 
-        if (!email.equals(user.getUsername())) {
+        if ((!email.isPresent()) || !email.get().equals(user.getUsername())) {
             return false;
         }
 
@@ -143,11 +113,6 @@ public class JwtTokenUtil implements Serializable {
         }
 
         return true;
-
-//        return email.equals(user.getUsername()) &&
-//                !isTokenExpired(token) //&&
-//                //!isCreatedBeforeLastPasswordReset(created, user.getUltimoLogin())
-//                ;
     }
 
 }
