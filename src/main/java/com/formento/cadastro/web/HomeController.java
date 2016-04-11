@@ -12,7 +12,7 @@ public class HomeController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public String home() {
-        return "Cadastro!";
+        return "Cadastro - https://github.com/andreformento/cadastro-api";
     }
 
 }

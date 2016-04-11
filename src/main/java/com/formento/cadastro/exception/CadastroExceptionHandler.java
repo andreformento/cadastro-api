@@ -1,6 +1,7 @@
 package com.formento.cadastro.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,8 +23,17 @@ public class CadastroExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedCadastroExceptionDefault.class)
     @ResponseBody
-    public CadastroError handleForbidden(UnauthorizedCadastroExceptionDefault e) {
+    public CadastroError handleUnauthorized(UnauthorizedCadastroExceptionDefault e) {
         return e.generateCadastroError();
+    }
+
+    // 401 Unauthorized:
+    // If the request already included Authorization credentials, then the 401 response indicates that authorization has been refused for those credentials.
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ResponseBody
+    public CadastroError handleUnauthorized(InternalAuthenticationServiceException e) {
+        return new CadastroErrorDefault(e.getMessage());
     }
 
     // 403 Forbidden:

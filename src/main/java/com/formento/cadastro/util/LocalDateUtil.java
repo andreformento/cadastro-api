@@ -1,7 +1,9 @@
 package com.formento.cadastro.util;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class LocalDateUtil {
 
@@ -16,4 +18,7 @@ public class LocalDateUtil {
         return localDate.format(FORMATTER);
     }
 
+    public static Date toDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
 }

@@ -1,7 +1,7 @@
 package com.formento.cadastro.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.formento.cadastro.model.representation.EmptyFieldSerializer;
 import com.formento.cadastro.model.representation.LocalDateSerializer;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -30,7 +30,9 @@ public class Usuario implements Serializable {
     @NotEmpty
     private String email;
 
-    @JsonIgnore
+    @NotNull
+    @NotEmpty
+    @JsonSerialize(using = EmptyFieldSerializer.class)
     private String senha;
 
     @JsonSerialize(using = LocalDateSerializer.class)
