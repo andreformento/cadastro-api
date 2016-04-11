@@ -60,7 +60,7 @@ public class AuthenticationRestController {
     @RequestMapping(value = "${jwt.route.authentication.refresh}", method = RequestMethod.GET)
     public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
+        String username = jwtTokenUtil.getEmailFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
 
         if (jwtTokenUtil.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {

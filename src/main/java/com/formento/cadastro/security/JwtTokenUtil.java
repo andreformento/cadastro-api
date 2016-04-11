@@ -34,15 +34,15 @@ public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String getUsernameFromToken(String token) {
-        String username;
+    public String getEmailFromToken(String token) {
+        String email;
         try {
             final Claims claims = getClaimsFromToken(token);
-            username = claims.getSubject();
+            email = claims.getSubject();
         } catch (Exception e) {
-            username = null;
+            email = null;
         }
-        return username;
+        return email;
     }
 
     public Date getCreatedDateFromToken(String token) {
@@ -158,11 +158,12 @@ public class JwtTokenUtil implements Serializable {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
-        final String username = getUsernameFromToken(token);
+        final String email = getEmailFromToken(token);
         final Date created = getCreatedDateFromToken(token);
         //final Date expiration = getExpirationDateFromToken(token);
-        return (username.equals(user.getUsername()) &&
+        return (email.equals(user.getUsername()) &&
                 !isTokenExpired(token) &&
                 !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));
     }
+
 }

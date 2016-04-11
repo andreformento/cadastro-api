@@ -26,7 +26,7 @@ public class UserRestController {
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public JwtUser getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader);
-        String username = jwtTokenUtil.getUsernameFromToken(token);
+        String username = jwtTokenUtil.getEmailFromToken(token);
         JwtUser user = (JwtUser) userDetailsService.loadUserByUsername(username);
         return user;
     }
