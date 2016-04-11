@@ -3,6 +3,7 @@ package com.formento.cadastro.model;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.formento.cadastro.model.representation.EmptyFieldSerializer;
 import com.formento.cadastro.model.representation.LocalDateSerializer;
+import com.formento.cadastro.model.representation.LocalDateTimeSerializer;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 // Immutable
@@ -41,8 +43,8 @@ public class Usuario implements Serializable {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate dataAtualizacao;
 
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate ultimoLogin;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    private LocalDateTime ultimoLogin;
 
     private String token;
 
@@ -53,7 +55,7 @@ public class Usuario implements Serializable {
 
     }
 
-    public Usuario(String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDate ultimoLogin, String token, Collection<Telefone> telefones) {
+    public Usuario(String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDateTime ultimoLogin, String token, Collection<Telefone> telefones) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -64,7 +66,7 @@ public class Usuario implements Serializable {
         this.telefones = telefones;
     }
 
-    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDate ultimoLogin, String token, Collection<Telefone> telefones) {
+    public Usuario(Long id, String nome, String email, String senha, LocalDate dataCriacao, LocalDate dataAtualizacao, LocalDateTime ultimoLogin, String token, Collection<Telefone> telefones) {
         this(nome, email, senha, dataCriacao, dataAtualizacao, ultimoLogin, token, telefones);
         this.id = id;
 
@@ -94,7 +96,7 @@ public class Usuario implements Serializable {
         return dataAtualizacao;
     }
 
-    public LocalDate getUltimoLogin() {
+    public LocalDateTime getUltimoLogin() {
         return ultimoLogin;
     }
 

@@ -21,7 +21,7 @@ public final class JwtUserFactory {
                 usuario.getSenha(),
                 new ArrayList<>(),
                 true,
-                LocalDateUtil.toDate(usuario.getDataAtualizacao())
+                usuario.getUltimoLogin()
         );
     }
 

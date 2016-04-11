@@ -6,6 +6,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(JUnit4.class)
 public class CodificadorComponentTest {
@@ -22,7 +23,8 @@ public class CodificadorComponentTest {
         String senhaCodificada = codificadorComponent.codificar(senha);
 
         // then
-        assertEquals("e8d95a51f3af4a3b134bf6bb680a213a", senhaCodificada);
+        assertNotNull(senhaCodificada);
+        assertEquals(60, senhaCodificada.length());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.formento.cadastro.security;
 
+import com.formento.cadastro.util.LocalDateTimeUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,22 +43,22 @@ public class JwtTokenUtil implements Serializable {
         return email;
     }
 
-    public Date getCreatedDateFromToken(String token) {
-        Date created;
+    public LocalDateTime getCreatedDateFromToken(String token) {
+        LocalDateTime created;
         try {
             final Claims claims = getClaimsFromToken(token);
-            created = new Date((Long) claims.get(CLAIM_KEY_CREATED));
+            created = LocalDateTimeUtil.fromLong((Long) claims.get(CLAIM_KEY_CREATED));
         } catch (Exception e) {
             created = null;
         }
         return created;
     }
 
-    public Date getExpirationDateFromToken(String token) {
-        Date expiration;
+    public LocalDateTime getExpirationDateFromToken(String token) {
+        LocalDateTime expiration;
         try {
             final Claims claims = getClaimsFromToken(token);
-            expiration = claims.getExpiration();
+            expiration = LocalDateTimeUtil.fromDate(claims.getExpiration());
         } catch (Exception e) {
             expiration = null;
         }
@@ -88,16 +90,16 @@ public class JwtTokenUtil implements Serializable {
     }
 
     private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expiration * 1000);
+        return new Date(System.currentTimeMillis() + (expiration * 1000));
     }
 
     private Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+        final LocalDateTime expiration = getExpirationDateFromToken(token);
+        return expiration.isBefore(LocalDateTime.now());
     }
 
-    private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
-        return (lastPasswordReset != null && created.before(lastPasswordReset));
+    private Boolean isCreatedBeforeLastPasswordReset(LocalDateTime created, LocalDateTime lastPasswordReset) {
+        return (lastPasswordReset != null && created.isBefore(lastPasswordReset));
     }
 
     private Boolean ignoreTokenExpiration(String token) {
@@ -124,9 +126,9 @@ public class JwtTokenUtil implements Serializable {
                 .compact();
     }
 
-    public Boolean canTokenBeRefreshed(String token, Date lastPasswordReset) {
-        final Date created = getCreatedDateFromToken(token);
-        return !isCreatedBeforeLastPasswordReset(created, lastPasswordReset)
+    public Boolean canTokenBeRefreshed(String token, LocalDateTime ultimoLogin) {
+        final LocalDateTime created = getCreatedDateFromToken(token);
+        return !isCreatedBeforeLastPasswordReset(created, ultimoLogin)
                 && (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
@@ -145,11 +147,11 @@ public class JwtTokenUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
         final String email = getEmailFromToken(token);
-        final Date created = getCreatedDateFromToken(token);
-        final Date expiration = getExpirationDateFromToken(token);
+        final LocalDateTime created = getCreatedDateFromToken(token);
+        final LocalDateTime expiration = getExpirationDateFromToken(token);
         return (email.equals(user.getUsername()) &&
                 !isTokenExpired(token) &&
-                !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));
+                !isCreatedBeforeLastPasswordReset(created, user.getUltimoLogin()));
     }
 
 }

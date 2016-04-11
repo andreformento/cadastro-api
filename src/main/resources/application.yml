@@ -12,7 +12,8 @@ jwt:
   header: Authorization
   scheme: Bearer
   secret: Senha
-  expiration: 1800 #segundos -> 30 minutos
+#  expiration: 1800 #segundos -> 30 minutos
+  expiration: 10 #segundos
   route:
     authentication:
       path: auth

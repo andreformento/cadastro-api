@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class UsuarioServiceProvider implements UsuarioService {
 
         String senha = codificadorComponent.codificar(usuario.getSenha());
         String token = jwtTokenUtil.generateToken(usuario.getEmail());
-        Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDate.now(), token, usuario.getTelefones());
+        Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDateTime.now(), token, usuario.getTelefones());
 
         usuarioValidator.beforeCreate(novo);
         return usuarioRepository.save(novo);
