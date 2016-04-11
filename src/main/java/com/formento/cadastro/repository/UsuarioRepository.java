@@ -12,10 +12,19 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface UsuarioRepository extends PagingAndSortingRepository<Usuario, Long> {
 
+    @Query("SELECT COUNT(usuario) from Usuario usuario WHERE usuario.email = ?1")
+    Integer countByEmail(@Param("email") String email);
+
     @Query(" select usuario " +
             " from Usuario usuario " +
             " where usuario.email = ?1")
     Optional<Usuario> findByEmail(@Param("email") String email);
+
+    @Query(" select usuario " +
+            " from Usuario usuario " +
+            " where usuario.email = ?1" +
+            "   and usuario.senha = ?2")
+    Optional<Usuario> findByEmailESenha(@Param("email") String email, @Param("senha") String senha);
 
     @Query("select usuario " +
             "from Usuario usuario ")

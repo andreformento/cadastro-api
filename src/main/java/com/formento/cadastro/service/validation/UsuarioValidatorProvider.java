@@ -6,8 +6,6 @@ import com.formento.cadastro.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class UsuarioValidatorProvider implements UsuarioValidator {
 
@@ -16,8 +14,8 @@ public class UsuarioValidatorProvider implements UsuarioValidator {
 
     @Override
     public void beforeCreate(Usuario usuario) {
-        Optional<Usuario> byEmail = usuarioService.getByEmail(usuario.getEmail());
-        if (byEmail.isPresent()) {
+        Integer count = usuarioService.countByEmail(usuario.getEmail());
+        if (count > 0) {
             throw new BusinessCadastroExceptionDefault("E-mail já existente");
         }
     }

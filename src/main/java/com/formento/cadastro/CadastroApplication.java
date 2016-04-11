@@ -35,7 +35,7 @@ public class CadastroApplication {
 
                 Map<String, Object> result = new HashMap<>();
                 Object errorMessage = requestAttributes.getAttribute(RequestDispatcher.ERROR_MESSAGE, RequestAttributes.SCOPE_REQUEST);
-                if (errorMessage == null) {
+                if (errorMessage == null || !(errorMessage instanceof String && !((String)errorMessage).isEmpty())) {
                     return errorAttributes;
                 } else {
                     result.put("messagem", errorMessage);

@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.formento.cadastro.model.representation.EmptyFieldSerializer;
 import com.formento.cadastro.model.representation.LocalDateSerializer;
 import com.formento.cadastro.model.representation.LocalDateTimeSerializer;
+import com.formento.cadastro.security.UsuarioAuthentication;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +18,7 @@ import java.util.Collection;
 
 // Immutable
 @Entity
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, UsuarioAuthentication {
 
     @Id
     @GeneratedValue
@@ -30,6 +32,7 @@ public class Usuario implements Serializable {
     @NotNull
     @Column(unique = true)
     @NotEmpty
+    @Size(min = 5, max = 30)
     private String email;
 
     @NotNull
@@ -46,6 +49,7 @@ public class Usuario implements Serializable {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime ultimoLogin;
 
+    @Size(max = 1024)
     private String token;
 
     @ElementCollection

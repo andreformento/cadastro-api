@@ -37,15 +37,15 @@ public class UsuarioController {
         return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioService.create(usuario)), HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Busca usuário por email", notes = "Retorna o usuário da busca", response = Usuario.class)
-    @RequestMapping(value = "/{email:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpEntity<Resource<Usuario>> getUsuarioByEmail(@PathVariable String email) {
-        Optional<Usuario> usuario = usuarioService.getByEmail(email);
-        if (usuario.isPresent()) {
-            return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuario.get()), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<Resource<Usuario>>(HttpStatus.NOT_FOUND);
-        }
-    }
+//    @ApiOperation(value = "Busca usuário por email", notes = "Retorna o usuário da busca", response = Usuario.class)
+//    @RequestMapping(value = "/{email:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public HttpEntity<Resource<Usuario>> getUsuarioByEmail(@PathVariable String email) {
+//        Optional<Usuario> usuario = usuarioService.countByEmail(email);
+//        if (usuario.isPresent()) {
+//            return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuario.get()), HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<Resource<Usuario>>(HttpStatus.NOT_FOUND);
+//        }
+//    }
 
 }

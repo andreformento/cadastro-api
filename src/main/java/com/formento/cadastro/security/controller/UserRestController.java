@@ -1,6 +1,6 @@
 package com.formento.cadastro.security.controller;
 
-import com.formento.cadastro.security.JwtTokenUtil;
+import com.formento.cadastro.security.component.JwtTokenUtil;
 import com.formento.cadastro.security.JwtUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

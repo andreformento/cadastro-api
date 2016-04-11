@@ -1,5 +1,7 @@
-package com.formento.cadastro.security;
+package com.formento.cadastro.security.component;
 
+import com.formento.cadastro.security.JwtUser;
+import com.formento.cadastro.security.UsuarioAuthentication;
 import com.formento.cadastro.util.LocalDateTimeUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -107,14 +109,10 @@ public class JwtTokenUtil implements Serializable {
         return (AUDIENCE_TABLET.equals(audience) || AUDIENCE_MOBILE.equals(audience));
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(userDetails.getUsername());
-    }
-
-    public String generateToken(String username) {
+    public String generateToken(UsuarioAuthentication usuarioAuthentication) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, username);
-        claims.put(CLAIM_KEY_CREATED, new Date());
+        claims.put(CLAIM_KEY_USERNAME, usuarioAuthentication.getEmail());
+        claims.put(CLAIM_KEY_CREATED, LocalDateTimeUtil.toLong(LocalDateTime.now()));
         return generateToken(claims);
     }
 
@@ -132,23 +130,23 @@ public class JwtTokenUtil implements Serializable {
                 && (!isTokenExpired(token) || ignoreTokenExpiration(token));
     }
 
-    public String refreshToken(String token) {
-        String refreshedToken;
-        try {
-            final Claims claims = getClaimsFromToken(token);
-            claims.put(CLAIM_KEY_CREATED, new Date());
-            refreshedToken = generateToken(claims);
-        } catch (Exception e) {
-            refreshedToken = null;
-        }
-        return refreshedToken;
-    }
+//    public String refreshToken(String token) {
+//        String refreshedToken;
+//        try {
+//            final Claims claims = getClaimsFromToken(token);
+//            claims.put(CLAIM_KEY_CREATED, new Date());
+//            refreshedToken = generateToken(claims);
+//        } catch (Exception e) {
+//            refreshedToken = null;
+//        }
+//        return refreshedToken;
+//    }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         JwtUser user = (JwtUser) userDetails;
         final String email = getEmailFromToken(token);
         final LocalDateTime created = getCreatedDateFromToken(token);
-        final LocalDateTime expiration = getExpirationDateFromToken(token);
+//        final LocalDateTime expiration = getExpirationDateFromToken(token);
         return (email.equals(user.getUsername()) &&
                 !isTokenExpired(token) &&
                 !isCreatedBeforeLastPasswordReset(created, user.getUltimoLogin()));

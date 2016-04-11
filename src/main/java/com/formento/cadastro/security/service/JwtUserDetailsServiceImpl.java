@@ -1,8 +1,9 @@
-package com.formento.cadastro.security;
+package com.formento.cadastro.security.service;
 
 import com.formento.cadastro.exception.UnauthorizedCadastroExceptionDefault;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.repository.UsuarioRepository;
+import com.formento.cadastro.security.JwtUserFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

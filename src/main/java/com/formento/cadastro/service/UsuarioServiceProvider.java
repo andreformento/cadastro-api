@@ -1,8 +1,11 @@
 package com.formento.cadastro.service;
 
+import com.formento.cadastro.exception.UnauthorizedCadastroExceptionDefault;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.repository.UsuarioRepository;
-import com.formento.cadastro.security.JwtTokenUtil;
+import com.formento.cadastro.security.UsuarioAuthentication;
+import com.formento.cadastro.security.component.JwtTokenUtil;
+import com.formento.cadastro.security.service.AuthenticationRestService;
 import com.formento.cadastro.service.component.CodificadorComponent;
 import com.formento.cadastro.service.validation.UsuarioValidator;
 import com.google.common.base.Preconditions;
@@ -12,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Optional;
 
 @Service
 public class UsuarioServiceProvider implements UsuarioService {
@@ -29,23 +31,65 @@ public class UsuarioServiceProvider implements UsuarioService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private AuthenticationRestService authenticationRestService;
+
+    private String getSenhaCodificada(String senhaNaoCodificada) {
+        return codificadorComponent.codificar(senhaNaoCodificada);
+    }
+
+    private String getToken(Usuario usuario) {
+        return jwtTokenUtil.generateToken(usuario);
+    }
+
     @Override
     public Usuario create(Usuario usuario) {
         Preconditions.checkNotNull(usuario, "Usuário não informado");
         Preconditions.checkNotNull(usuario.getSenha(), "senha não informada");
         Preconditions.checkNotNull(usuario.getEmail(), "email não informado");
 
-        String senha = codificadorComponent.codificar(usuario.getSenha());
-        String token = jwtTokenUtil.generateToken(usuario.getEmail());
-        Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDateTime.now(), token, usuario.getTelefones());
+        String senha = getSenhaCodificada(usuario.getSenha());
+
+        Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDateTime.now(), getToken(usuario), usuario.getTelefones());
 
         usuarioValidator.beforeCreate(novo);
-        return usuarioRepository.save(novo);
+        Usuario save = usuarioRepository.save(novo);
+//        authenticationRestService.createAuthentication(usuario);
+        return save;
     }
 
     @Override
-    public Optional<Usuario> getByEmail(String email) {
-        return usuarioRepository.findByEmail(email);
+    public Usuario updateToken(UsuarioAuthentication usuarioAuthentication) {
+        Usuario byEmailESenha = getByEmailESenha(usuarioAuthentication.getEmail(), getSenhaCodificada(usuarioAuthentication.getSenha()));
+
+        String token = getToken(byEmailESenha);
+
+        Usuario usuarioAtualizarToken = new Usuario(
+                byEmailESenha.getId(),
+                byEmailESenha.getNome(),
+                byEmailESenha.getEmail(),
+                byEmailESenha.getSenha(),
+                byEmailESenha.getDataCriacao(),
+                byEmailESenha.getDataCriacao(),
+                LocalDateTime.now(),
+                token,
+                byEmailESenha.getTelefones());
+
+        Usuario save = usuarioRepository.save(usuarioAtualizarToken);
+//        authenticationRestService.createAuthentication(save);
+        return save;
+    }
+
+    @Override
+    public Usuario getByEmailESenha(String email, String senha) {
+        return usuarioRepository.findByEmail(email).orElseThrow(() -> {
+            return new UnauthorizedCadastroExceptionDefault("Usuário e/ou senha inválidos");
+        });
+    }
+
+    @Override
+    public Integer countByEmail(String email) {
+        return usuarioRepository.countByEmail(email);
     }
 
     @Override
