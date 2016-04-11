@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestAttributes;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import javax.servlet.RequestDispatcher;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,8 +33,9 @@ public class CadastroApplication {
                 Map<String, Object> errorAttributes = super.getErrorAttributes(requestAttributes, includeStackTrace);
 
                 Map<String, Object> result = new HashMap<>();
-                Object errorMessage = requestAttributes.getAttribute(RequestDispatcher.ERROR_MESSAGE, RequestAttributes.SCOPE_REQUEST);
-                if (errorMessage == null || !(errorMessage instanceof String && !((String)errorMessage).isEmpty())) {
+                Object errorMessage = errorAttributes.get("message");
+//                Object errorMessage = requestAttributes.getAttribute(RequestDispatcher.ERROR_MESSAGE, RequestAttributes.SCOPE_REQUEST);
+                if (errorMessage == null || !(errorMessage instanceof String && !((String) errorMessage).isEmpty())) {
                     return errorAttributes;
                 } else {
                     result.put("messagem", errorMessage);

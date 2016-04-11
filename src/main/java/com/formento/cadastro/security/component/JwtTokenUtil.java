@@ -1,9 +1,12 @@
 package com.formento.cadastro.security.component;
 
+import com.formento.cadastro.exception.AccessDeniedCadastroExceptionDefault;
+import com.formento.cadastro.exception.UnauthorizedCadastroExceptionDefault;
 import com.formento.cadastro.security.JwtUser;
 import com.formento.cadastro.security.UsuarioAuthentication;
 import com.formento.cadastro.util.LocalDateTimeUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +42,9 @@ public class JwtTokenUtil implements Serializable {
         try {
             final Claims claims = getClaimsFromToken(token);
             email = claims.getSubject();
+        } catch (AccessDeniedCadastroExceptionDefault e) {
+            email = null;
+            throw e;
         } catch (Exception e) {
             email = null;
         }
@@ -85,6 +91,9 @@ public class JwtTokenUtil implements Serializable {
                     .setSigningKey(secret)
                     .parseClaimsJws(token)
                     .getBody();
+        } catch (ExpiredJwtException e) {
+            claims = null;
+            throw new AccessDeniedCadastroExceptionDefault("Sessão inválida");
         } catch (Exception e) {
             claims = null;
         }
@@ -147,10 +156,21 @@ public class JwtTokenUtil implements Serializable {
         final String email = getEmailFromToken(token);
         final LocalDateTime created = getCreatedDateFromToken(token);
 //        final LocalDateTime expiration = getExpirationDateFromToken(token);
-        return email.equals(user.getUsername()) &&
-                !isTokenExpired(token) //&&
-                //!isCreatedBeforeLastPasswordReset(created, user.getUltimoLogin())
-                ;
+
+        if (!email.equals(user.getUsername())) {
+            return false;
+        }
+
+        if (isTokenExpired(token)) {
+            throw new UnauthorizedCadastroExceptionDefault("Sessão inválida");
+        }
+
+        return true;
+
+//        return email.equals(user.getUsername()) &&
+//                !isTokenExpired(token) //&&
+//                //!isCreatedBeforeLastPasswordReset(created, user.getUltimoLogin())
+//                ;
     }
 
 }
