@@ -1,4 +1,4 @@
-package com.formento.cadastro.model.representation;
+package com.formento.cadastro.model.converter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

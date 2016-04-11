@@ -1,9 +1,9 @@
 package com.formento.cadastro.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.formento.cadastro.model.representation.EmptyFieldSerializer;
-import com.formento.cadastro.model.representation.LocalDateSerializer;
-import com.formento.cadastro.model.representation.LocalDateTimeSerializer;
+import com.formento.cadastro.model.converter.EmptyFieldSerializer;
+import com.formento.cadastro.model.converter.LocalDateSerializer;
+import com.formento.cadastro.model.converter.LocalDateTimeSerializer;
 import com.formento.cadastro.security.UsuarioAuthentication;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
