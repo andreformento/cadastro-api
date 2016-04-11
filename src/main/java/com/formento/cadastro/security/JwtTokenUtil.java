@@ -21,8 +21,6 @@ public class JwtTokenUtil implements Serializable {
     private static final String CLAIM_KEY_AUDIENCE = "audience";
     private static final String CLAIM_KEY_CREATED = "created";
 
-    private static final String AUDIENCE_UNKNOWN = "unknown";
-    private static final String AUDIENCE_WEB = "web";
     private static final String AUDIENCE_MOBILE = "mobile";
     private static final String AUDIENCE_TABLET = "tablet";
 
@@ -108,8 +106,12 @@ public class JwtTokenUtil implements Serializable {
     }
 
     public String generateToken(UserDetails userDetails) {
+        return generateToken(userDetails.getUsername());
+    }
+
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_USERNAME, username);
         claims.put(CLAIM_KEY_CREATED, new Date());
         return generateToken(claims);
     }
@@ -144,7 +146,7 @@ public class JwtTokenUtil implements Serializable {
         JwtUser user = (JwtUser) userDetails;
         final String email = getEmailFromToken(token);
         final Date created = getCreatedDateFromToken(token);
-        //final Date expiration = getExpirationDateFromToken(token);
+        final Date expiration = getExpirationDateFromToken(token);
         return (email.equals(user.getUsername()) &&
                 !isTokenExpired(token) &&
                 !isCreatedBeforeLastPasswordReset(created, user.getLastPasswordResetDate()));

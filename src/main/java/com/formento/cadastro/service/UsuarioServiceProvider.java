@@ -2,6 +2,7 @@ package com.formento.cadastro.service;
 
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.repository.UsuarioRepository;
+import com.formento.cadastro.security.JwtTokenUtil;
 import com.formento.cadastro.service.component.CodificadorComponent;
 import com.formento.cadastro.service.validation.UsuarioValidator;
 import com.google.common.base.Preconditions;
@@ -24,6 +25,9 @@ public class UsuarioServiceProvider implements UsuarioService {
     @Autowired
     private CodificadorComponent codificadorComponent;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     @Override
     public Usuario create(Usuario usuario) {
         Preconditions.checkNotNull(usuario, "Usuário não informado");
@@ -31,7 +35,7 @@ public class UsuarioServiceProvider implements UsuarioService {
         Preconditions.checkNotNull(usuario.getEmail(), "email não informado");
 
         String senha = codificadorComponent.codificar(usuario.getSenha());
-        String token = codificadorComponent.codificar(usuario.getEmail());
+        String token = jwtTokenUtil.generateToken(usuario.getEmail());
         Usuario novo = new Usuario(usuario.getNome(), usuario.getEmail(), senha, LocalDate.now(), LocalDate.now(), LocalDate.now(), token, usuario.getTelefones());
 
         usuarioValidator.beforeCreate(novo);
