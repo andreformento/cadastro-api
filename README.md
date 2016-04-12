@@ -48,6 +48,9 @@ Isto retornará um JSON com o usuário e o token que dará acesso ao sistema.
 
 *Obs.: O Token é válido por 30 minutos.*
 
+![Consulta de usuário](/screenshots/1-cadastro.png?raw=true "Consulta de usuário")
+cadastro-api/screenshots/1-cadastro.png
+
 ## Consulta de usuário
 Com o token, é possível fazer a consulta do usuário através da seguinte URL:
 ```
@@ -57,6 +60,8 @@ método: GET
 E no header da requisição é necessário informar o key: `Authorization`
 No value é necessário informar `Bearer {token}`
 Isto retornará os dados atualizados do usuário
+
+![Registro](/screenshots/2-consulta.png?raw=true "Registro")
 
 ## Login
 Caso não possua o token e já tenha feito o cadastro, é possível realizar o login através da seguinte URL:
@@ -73,6 +78,8 @@ método: POST
 }
 ```
 Isto retornará um JSON com o usuário e o token que dará acesso ao sistema.
+
+![Login](/screenshots/3-login.png?raw=true "Login")
 
 **As mensagens de erro seguem o seguinte padrão:**
 ```json
