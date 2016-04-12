@@ -35,18 +35,4 @@ public class LocalDateTimeUtilTest {
         assertEquals(LocalDateTime.of(2016, 3, 31, 18,30,40), localDateTime);
     }
 
-//    @Test
-//    public void testToDate() throws ParseException {
-//        // given
-//        Date date = new SimpleDateFormat("dd-MM-yyyy").parse("14-03-2016");
-//
-//        LocalDateTime localDateTime = LocalDateTime.of(2016, 3, 14, 18,30,40);
-//
-//        // when
-//        Date toDate = LocalDateTimeUtil.toDate(localDateTime);
-//
-//        // then
-//        assertEquals(date, toDate);
-//    }
-
 }

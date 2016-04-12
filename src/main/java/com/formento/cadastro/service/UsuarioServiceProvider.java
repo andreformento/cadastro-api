@@ -36,6 +36,17 @@ public class UsuarioServiceProvider implements UsuarioService {
     @Autowired
     private AuthenticationRestService authenticationRestService;
 
+    public UsuarioServiceProvider() {
+    }
+
+    public UsuarioServiceProvider(UsuarioRepository usuarioRepository, UsuarioValidator usuarioValidator, CodificadorComponent codificadorComponent, JwtTokenUtil jwtTokenUtil, AuthenticationRestService authenticationRestService) {
+        this.usuarioRepository = usuarioRepository;
+        this.usuarioValidator = usuarioValidator;
+        this.codificadorComponent = codificadorComponent;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.authenticationRestService = authenticationRestService;
+    }
+
     private String getSenhaCodificada(String senhaNaoCodificada) {
         return codificadorComponent.codificar(senhaNaoCodificada);
     }

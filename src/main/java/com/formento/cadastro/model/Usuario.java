@@ -132,4 +132,13 @@ public class Usuario implements Serializable, UsuarioAuthentication {
         return uuid != null ? uuid.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "email='" + email + '\'' +
+                ", uuid=" + uuid +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
+    
 }

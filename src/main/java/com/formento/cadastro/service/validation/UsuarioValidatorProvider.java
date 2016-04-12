@@ -12,6 +12,14 @@ public class UsuarioValidatorProvider implements UsuarioValidator {
     @Autowired
     private UsuarioService usuarioService;
 
+    public UsuarioValidatorProvider() {
+
+    }
+
+    public UsuarioValidatorProvider(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
     @Override
     public void beforeCreate(Usuario usuario) {
         Integer count = usuarioService.countByEmail(usuario.getEmail());
