@@ -16,7 +16,7 @@ https://cadastro-api.herokuapp.com
 
 Para rodar a aplicação basta fazer o clone dela e rodar o seguinte comando:
 ```
-mvn spring-boot:run
+mvn clean package spring-boot:run
 ```
 
 ## Registro
