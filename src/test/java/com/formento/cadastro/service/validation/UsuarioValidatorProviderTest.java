@@ -15,10 +15,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 

@@ -27,6 +27,14 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    public UsuarioController() {
+
+    }
+
+    public UsuarioController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
     @ApiOperation(value = "Carregar o usuário logado", notes = "Retorna o usuario logado", response = Usuario.class)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<Resource<Usuario>> getUsuario() {
