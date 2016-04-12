@@ -7,7 +7,7 @@ Este é um aplicativo back-end que possui uma API RESTful. As requisições func
 - Java 8, Maven,
 - Hibernate, HSQLDB
 - JUnit, Fixture Factory, MockMvc
-- Spring Boot, Spring Security, Spring Data Rest, Spring hateoas,
+- Spring Boot, Spring Security, Spring Data Rest, Spring hateoas
 - JWT
 - Continuous Integration - Heroku integrado com o GitHub
 
