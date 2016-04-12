@@ -2,3 +2,37 @@
 API RESTful para cadastro
 
 Este é um aplicativo back-end que possui uma API RESTful. As requisições funcionam com JSON (entrada e saída). 
+
+Tecnologias
+Java 8, Maven,
+Hibernate, HSQLDB
+JUnit, Fixture Factory, MockMvc
+Spring Boot, Spring Security, Spring Data Rest, Spring hateoas,
+JWT
+
+Continuous Integration - Heroku integrado com o GitHub
+
+É possível acessar a aplicação rodando em:
+https://cadastro-api.herokuapp.com
+
+#### Ao iniciar, é possível realizar um cadastro através da seguinte URL:
+/v1/usuarios - método: POST
+Exemplo de body:
+{ "nome": "andre", "email": "andre@mail.com", "senha": "s3nh@", "telefones": [ { "numero": "123456789", "ddd": "11" }, { "numero": "987654321", "ddd": "47" } ] }
+Isto retornará um JSON com o usuário e o token que dará acesso ao sistema.
+
+Obs.: O Token é válido por 30 minutos.
+
+#### Com o token, é possível fazer a consulta do usuário através da seguinte URL:
+/v1/usuarios - método: GET
+E no header da requisição é necessário informar o key: Authorization
+No value é necessário informar Bearer {token}
+Isto retornará os dados atualizados do usuário
+
+#### Caso não possua o token e já tenha feito o cadastro, é possível realizar o login através da seguinte URL:
+/auth - método: POST
+Exemplo de body:
+{ "email": "andre@mail.com", "senha": "s3nh@" }
+Isto retornará um JSON com o usuário e o token que dará acesso ao sistema.
+
+As mensagens de erro seguem o seguinte padrão: { "mensagem": "mensagem de erro" }
