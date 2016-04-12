@@ -1,9 +1,13 @@
 package com.formento.cadastro.service.validation;
 
+import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import com.formento.cadastro.exception.BusinessCadastroExceptionDefault;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.service.UsuarioService;
+import com.formento.cadastro.service.template.UsuarioTemplate;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,6 +33,11 @@ public class UsuarioValidatorProviderTest {
 
     private UsuarioValidator usuarioValidator;
 
+    @BeforeClass
+    public static void initClass() {
+        FixtureFactoryLoader.loadTemplates("com.formento.cadastro.service.template");
+    }
+
     @Before
     public void init() {
         this.usuarioValidator = new UsuarioValidatorProvider(usuarioService);
@@ -36,7 +46,8 @@ public class UsuarioValidatorProviderTest {
     @Test
     public void devePermitirGravarQuandoNaoHouverUsuarioComEmailDuplicado() {
         // given
-        Usuario usuario = new Usuario("andre formento", "andreformento@mail.com", "minhaSenha", LocalDate.now(), LocalDate.now(), LocalDateTime.now(), null, new ArrayList<>());
+        Usuario usuario = Fixture.from(Usuario.class).gimme(UsuarioTemplate.VALID_USUARIO_NOVO);
+        assertNotNull(usuario);
 
         // when...then
         when(usuarioService.countByEmail(usuario.getEmail())).thenReturn(0);
@@ -46,7 +57,8 @@ public class UsuarioValidatorProviderTest {
     @Test
     public void naoDevePermitirGravarQuandoHouverUsuarioComEmailDuplicado() {
         // given
-        Usuario usuario = new Usuario("andre formento", "andreformento@mail.com", "minhaSenha", LocalDate.now(), LocalDate.now(), LocalDateTime.now(), null, new ArrayList<>());
+        Usuario usuario = Fixture.from(Usuario.class).gimme(UsuarioTemplate.VALID_USUARIO_NOVO);
+        assertNotNull(usuario);
 
         // then
         expectedException.expect(BusinessCadastroExceptionDefault.class);

@@ -1,20 +1,20 @@
 package com.formento.cadastro.service;
 
+import br.com.six2six.fixturefactory.Fixture;
+import br.com.six2six.fixturefactory.loader.FixtureFactoryLoader;
 import com.formento.cadastro.model.Usuario;
 import com.formento.cadastro.repository.UsuarioRepository;
 import com.formento.cadastro.security.component.JwtTokenUtil;
 import com.formento.cadastro.security.service.AuthenticationRestService;
 import com.formento.cadastro.service.component.CodificadorComponent;
+import com.formento.cadastro.service.template.UsuarioTemplate;
 import com.formento.cadastro.service.validation.UsuarioValidator;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
@@ -39,6 +39,11 @@ public class UsuarioServiceProviderTest {
 
     private UsuarioService usuarioService;
 
+    @BeforeClass
+    public static void initClass() {
+        FixtureFactoryLoader.loadTemplates("com.formento.cadastro.service.template");
+    }
+
     @Before
     public void init() {
         this.usuarioService = new UsuarioServiceProvider(usuarioRepository, usuarioValidator, codificadorComponent, jwtTokenUtil, authenticationRestService);
@@ -47,7 +52,8 @@ public class UsuarioServiceProviderTest {
     @Test
     public void deveGravarUmNovoUsuario() {
         // given
-        Usuario usuario = new Usuario("andre formento", "andreformento@mail.com", "minhaSenha", LocalDate.now(), LocalDate.now(), LocalDateTime.now(), null, new ArrayList<>());
+        Usuario usuario = Fixture.from(Usuario.class).gimme(UsuarioTemplate.VALID_USUARIO_NOVO);
+        assertNotNull(usuario);
 
         // when
         when(codificadorComponent.codificar(usuario.getSenha())).thenReturn(usuario.getSenha());
