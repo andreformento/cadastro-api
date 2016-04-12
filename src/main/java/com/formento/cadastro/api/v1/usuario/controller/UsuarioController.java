@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+
 @RestController
 @RequestMapping("/v1/usuarios")
 @Validated
@@ -40,7 +42,7 @@ public class UsuarioController {
     public HttpEntity<Resource<Usuario>> getUsuario() {
         Optional<Usuario> usuarioLogado = usuarioService.getUsuarioLogado();
         if (usuarioLogado.isPresent()) {
-            return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioLogado.get()), HttpStatus.OK);
+            return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioLogado.get(), linkTo(UsuarioController.class).withSelfRel()), HttpStatus.OK);
         } else {
             return new ResponseEntity<Resource<Usuario>>(HttpStatus.NOT_FOUND);
         }
@@ -49,7 +51,7 @@ public class UsuarioController {
     @ApiOperation(value = "Criar um usuário", notes = "Cria e retorna um usuário", response = Usuario.class)
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpEntity<Resource<Usuario>> create(@RequestBody Usuario usuario) {
-        return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioService.create(usuario)), HttpStatus.OK);
+        return new ResponseEntity<Resource<Usuario>>(new Resource<>(usuarioService.create(usuario), linkTo(UsuarioController.class).withSelfRel()), HttpStatus.OK);
     }
 
 }
