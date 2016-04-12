@@ -49,7 +49,7 @@ Isto retornará um JSON com o usuário e o token que dará acesso ao sistema.
 *Obs.: O Token é válido por 30 minutos.*
 
 ![Consulta de usuário](/screenshots/1-cadastro.png?raw=true "Consulta de usuário")
-cadastro-api/screenshots/1-cadastro.png
+
 
 ## Consulta de usuário
 Com o token, é possível fazer a consulta do usuário através da seguinte URL:
