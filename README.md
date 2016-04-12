@@ -19,7 +19,8 @@ Para rodar a aplicação basta fazer o clone dela e rodar o seguinte comando:
 mvn spring-boot:run
 ```
 
-#### Ao iniciar, é possível realizar um cadastro:
+## Registro
+Ao iniciar, é possível realizar um cadastro:
 ##### Exemplo: #####
 ```
 URL: /v1/usuarios
@@ -47,7 +48,8 @@ Isto retornará um JSON com o usuário e o token que dará acesso ao sistema.
 
 *Obs.: O Token é válido por 30 minutos.*
 
-#### Com o token, é possível fazer a consulta do usuário através da seguinte URL:
+## Consulta de usuário
+Com o token, é possível fazer a consulta do usuário através da seguinte URL:
 ```
 URL: /v1/usuarios
 método: GET
@@ -56,7 +58,8 @@ E no header da requisição é necessário informar o key: `Authorization`
 No value é necessário informar `Bearer {token}`
 Isto retornará os dados atualizados do usuário
 
-#### Caso não possua o token e já tenha feito o cadastro, é possível realizar o login através da seguinte URL:
+## Login
+Caso não possua o token e já tenha feito o cadastro, é possível realizar o login através da seguinte URL:
 ##### Exemplo: #####
 ```
 URL: /auth
