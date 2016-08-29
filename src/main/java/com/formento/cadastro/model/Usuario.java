@@ -1,9 +1,8 @@
 package com.formento.cadastro.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.formento.cadastro.model.converter.EmptyFieldSerializer;
-import com.formento.cadastro.model.converter.LocalDateSerializer;
-import com.formento.cadastro.model.converter.LocalDateTimeSerializer;
+import com.formento.cadastro.model.converter.*;
 import com.formento.cadastro.security.UsuarioAuthentication;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Email;
@@ -45,12 +44,15 @@ public class Usuario implements Serializable, UsuarioAuthentication {
     private String senha;
 
     @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataCriacao;
 
     @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dataAtualizacao;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime ultimoLogin;
 
     @Size(max = 1024)
@@ -140,5 +142,5 @@ public class Usuario implements Serializable, UsuarioAuthentication {
                 ", nome='" + nome + '\'' +
                 '}';
     }
-    
+
 }
