@@ -1,5 +1,8 @@
 package com.formento.cadastro.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.Embeddable;
@@ -7,6 +10,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class Telefone implements Serializable {
 
     private String ddd;
@@ -15,30 +21,19 @@ public class Telefone implements Serializable {
     @NotEmpty
     private String numero;
 
-    public Telefone() {
-    }
-
-    public Telefone(String ddd, String numero) {
-        this.ddd = ddd;
-        this.numero = numero;
-    }
-
-    public String getDdd() {
-        return ddd;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Telefone telefone = (Telefone) o;
 
-        if (ddd != null ? !ddd.equals(telefone.ddd) : telefone.ddd != null) return false;
+        if (ddd != null ? !ddd.equals(telefone.ddd) : telefone.ddd != null) {
+            return false;
+        }
         return numero != null ? numero.equals(telefone.numero) : telefone.numero == null;
 
     }
